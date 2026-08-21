@@ -3,92 +3,476 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tiếng Trung Cô Phương · Chọn khoá học</title>
+<title>Tiếng Trung Cô Phương</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent:#c23320; --accent-dark:#8f2415; --bg:#f6efe0; --card:#fffdf7;
+  --accent:#c23320; --accent-dark:#8f2415; --accent-soft:#f0d9ce;
+  --bg:#f6efe0; --bg-alt:#eee2c8; --card:#fffdf7;
   --ink:#2b241d; --ink-soft:#6d6152; --line:#e3d5b4;
+  --success:#4f7a5b; --success-bg:#e2ede2;
+  --warn:#a4732c; --warn-bg:#f3e6cf;
+  --error:#a8402f; --error-bg:#f6e2da;
+  --radius:16px;
 }
 *{box-sizing:border-box;}
-body{
-  margin:0; font-family:'Be Vietnam Pro',sans-serif; background:var(--bg); color:var(--ink);
-  min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:40px 20px;
-}
+body{margin:0;font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+h1,h2,h3{font-family:'Noto Serif SC',serif;margin:0;}
 .hanzi{font-family:'Noto Serif SC',serif;}
-header{text-align:center; margin-bottom:36px;}
-.mark{
-  width:56px;height:56px;border-radius:16px;background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC';
-  font-weight:700;font-size:28px;margin:0 auto 14px;
-}
-h1{font-family:'Noto Serif SC',serif;font-size:24px;margin:0 0 6px;}
-p.sub{color:var(--ink-soft);font-size:13.5px;margin:0;}
+.hidden{display:none !important;}
+button{font-family:'Be Vietnam Pro',sans-serif;cursor:pointer;}
+
+/* ---------- login gate ---------- */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:var(--accent-dark);}
+.login-box{background:var(--card);border-radius:20px;padding:34px 30px;max-width:420px;width:100%;box-shadow:0 22px 60px rgba(0,0,0,.3);}
+.login-mark{width:50px;height:50px;border-radius:14px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC';font-weight:700;font-size:24px;margin:0 auto 12px;}
+.login-box h1{font-size:19px;text-align:center;}
+.login-box .sub{text-align:center;color:var(--ink-soft);font-size:12.5px;margin:2px 0 22px;}
+.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.role-btn{background:#fff;border:2px solid var(--line);border-radius:13px;padding:16px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.role-btn .ic{font-size:24px;}
+.role-btn .lb{font-weight:700;font-size:13px;}
+.role-btn.active{border-color:var(--accent);background:var(--accent-soft);}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;}
+.field input{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:14px;font-family:'Be Vietnam Pro';}
+.login-go{width:100%;background:var(--accent);color:#fff;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:700;margin-top:4px;}
+.login-go:hover{background:var(--accent-dark);}
+.login-err{color:var(--error);font-size:12px;margin-top:9px;display:none;}
+.login-note{font-size:10.5px;color:var(--ink-soft);text-align:center;margin-top:14px;}
+
+/* ---------- student course grid ---------- */
+#student-view{min-height:100vh;display:none;flex-direction:column;align-items:center;padding:40px 20px;}
+#student-view.show{display:flex;}
+.topbar-mini{position:fixed;top:0;left:0;right:0;background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;font-size:12px;display:flex;justify-content:space-between;align-items:center;}
+.topbar-mini button{background:none;border:none;color:var(--accent);font-size:12px;text-decoration:underline;}
+header.sv{text-align:center;margin:50px 0 34px;}
+.mark{width:56px;height:56px;border-radius:16px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC';font-weight:700;font-size:28px;margin:0 auto 14px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;max-width:960px;width:100%;}
-a.course{
-  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 20px;
-  text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:8px;
-  transition:transform .15s, border-color .15s;position:relative;
-}
-a.course:hover{transform:translateY(-3px);border-color:var(--accent);}
-a.course.soon{opacity:.5;pointer-events:none;cursor:default;}
-a.course.soon:hover{transform:none;border-color:var(--line);}
-.soon-badge{
-  position:absolute;top:14px;right:14px;background:var(--bg-alt,#eee2c8);color:var(--ink-soft);
-  font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;
-}
-a.course .lv{
-  width:40px;height:40px;border-radius:10px;background:#f0d9ce;color:var(--accent-dark);
-  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
-}
-a.course .name{font-size:17px;font-weight:700;font-family:'Noto Serif SC';}
+a.course{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 20px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:8px;position:relative;}
+a.course:hover{border-color:var(--accent);}
+a.course.soon{opacity:.5;pointer-events:none;}
+.soon-badge{position:absolute;top:14px;right:14px;background:var(--bg-alt);color:var(--ink-soft);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;}
+a.course .lv{width:40px;height:40px;border-radius:10px;background:#f0d9ce;color:var(--accent-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;}
+a.course .name{font-size:17px;font-weight:700;}
 a.course .desc{font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
 a.course .go{font-size:12px;color:var(--accent);font-weight:600;margin-top:6px;}
-footer{margin-top:40px;font-size:11.5px;color:var(--ink-soft);text-align:center;}
+footer.sv{margin-top:40px;font-size:11.5px;color:var(--ink-soft);text-align:center;}
+
+/* ---------- teacher dashboard (giữ nguyên style từ quan-ly.html) ---------- */
+#teacher-app{display:none;min-height:100vh;}
+#teacher-app.show{display:flex;}
+#sidebar{width:250px;flex-shrink:0;background:var(--accent-dark);color:#fdf3ea;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+#sb-head{padding:20px 18px;border-bottom:1px solid rgba(255,255,255,.15);}
+#sb-head .brand{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+#sb-head .mark2{width:34px;height:34px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC';font-weight:700;font-size:16px;}
+#sb-head .bn{font-weight:700;font-size:13px;line-height:1.2;}
+#sb-head .bn small{display:block;font-weight:400;font-size:10px;opacity:.7;}
+.user-chip{background:rgba(255,255,255,.08);border-radius:11px;padding:9px 11px;font-size:12.5px;}
+#nav{list-style:none;margin:0;padding:12px 10px;flex:1;}
+.nav-btn{width:100%;text-align:left;background:none;border:none;color:inherit;padding:10px 12px;border-radius:10px;font-size:13.5px;display:flex;align-items:center;gap:9px;margin-bottom:3px;}
+.nav-btn.active{background:var(--accent);font-weight:600;}
+.nav-btn:not(.active):hover{background:rgba(255,255,255,.1);}
+#sb-foot{padding:12px 14px 18px;}
+.logout-btn{width:100%;background:rgba(255,255,255,.08);border:none;color:#fdf3ea;border-radius:10px;padding:9px;font-size:12px;}
+#tmain{flex:1;min-width:0;}
+#ttopbar{position:sticky;top:0;z-index:5;background:var(--bg-alt);border-bottom:2px solid var(--line);padding:16px 26px;}
+#ttopbar h2{font-size:18px;}
+#ttopbar .sub{color:var(--ink-soft);font-size:12px;}
+#tcontent{padding:24px 26px 60px;max-width:1150px;}
+#sidebar-toggle{display:none;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+.tgrid{display:grid;gap:14px;}
+.tgrid-3{grid-template-columns:repeat(3,1fr);}
+.tgrid-4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:900px){.tgrid-3,.tgrid-4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.tgrid-3,.tgrid-4{grid-template-columns:1fr;}}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 17px;}
+.stat-card .num{font-family:'Noto Serif SC';font-size:24px;font-weight:700;margin:8px 0 2px;}
+.stat-card .lbl{font-size:11.5px;color:var(--ink-soft);}
+.badge{display:inline-flex;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.badge.ok{background:var(--success-bg);color:var(--success);}
+.badge.warn{background:var(--warn-bg);color:var(--warn);}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:12.5px;font-weight:600;}
+.btn:hover{background:var(--accent-dark);}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--ink);}
+.btn.sm{padding:5px 11px;font-size:11.5px;border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;font-size:10px;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid var(--line);padding:7px 9px;}
+td{padding:9px;border-bottom:1px solid var(--line);}
+tr:hover td{background:var(--bg-alt);}
+.avatar-sm{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px;margin-right:8px;vertical-align:middle;}
+.section-title{font-size:16px;margin-bottom:4px;}
+.section-sub{color:var(--ink-soft);font-size:12px;margin-bottom:14px;}
+.class-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;}
+.class-card:hover{border-color:var(--accent);}
+.class-card h3{font-size:15px;margin-bottom:4px;}
+.class-card .meta{font-size:11.5px;color:var(--ink-soft);}
+.back-link{background:none;border:none;color:var(--accent-dark);font-size:12px;font-weight:600;margin-bottom:12px;display:flex;gap:5px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(43,36,29,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:var(--card);border-radius:16px;padding:24px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;}
+.modal-box h3{font-size:16px;margin-bottom:4px;}
+.modal-box .sub{font-size:12px;color:var(--ink-soft);margin-bottom:16px;}
+.f2{margin-bottom:12px;}
+.f2 label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-soft);margin-bottom:4px;}
+.f2 input,.f2 textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Be Vietnam Pro';}
+.f2 textarea{min-height:64px;}
+.modal-actions{display:flex;gap:9px;margin-top:14px;}
+.placeholder{border:2px dashed var(--line);border-radius:14px;padding:40px 16px;text-align:center;color:var(--ink-soft);}
+@media(max-width:840px){
+  #sidebar{position:fixed;left:-100%;z-index:60;transition:left .25s;}
+  #sidebar.open{left:0;}
+  #sidebar-toggle{display:flex;position:sticky;top:0;z-index:20;background:var(--accent-dark);color:#fff;border:none;padding:12px 16px;font-size:13px;align-items:center;gap:8px;width:100%;}
+  #tcontent{padding:16px 14px 50px;}
+}
 </style>
 </head>
 <body>
-<header>
-  <div class="mark">中</div>
-  <h1>Tiếng Trung Cô Phương</h1>
-  <p class="sub">Chọn khoá học để bắt đầu</p>
-</header>
 
-<div class="grid">
-  <a class="course" href="hsk1.html">
-    <div class="lv">HSK1</div>
-    <div class="name hanzi">HSK 一级</div>
-    <div class="desc">Nhập môn — 150 từ vựng, giao tiếp cơ bản hằng ngày.</div>
-    <div class="go">Vào học →</div>
-  </a>
-  <a class="course soon" href="#">
-    <span class="soon-badge">Sắp ra mắt</span>
-    <div class="lv">HSK2</div>
-    <div class="name hanzi">HSK 二级</div>
-    <div class="desc">300 từ vựng, giao tiếp các chủ đề quen thuộc.</div>
-  </a>
-  <a class="course soon" href="#">
-    <span class="soon-badge">Sắp ra mắt</span>
-    <div class="lv">HSK3</div>
-    <div class="name hanzi">HSK 三级</div>
-    <div class="desc">600 từ vựng, giao tiếp trong học tập, công việc.</div>
-  </a>
-  <a class="course soon" href="#">
-    <span class="soon-badge">Sắp ra mắt</span>
-    <div class="lv">HSK4</div>
-    <div class="name hanzi">HSK 四级</div>
-    <div class="desc">1200 từ vựng, trao đổi chủ đề rộng, trôi chảy.</div>
-  </a>
-  <a class="course soon" href="#">
-    <span class="soon-badge">Sắp ra mắt</span>
-    <div class="lv">HSK5</div>
-    <div class="name hanzi">HSK 五级</div>
-    <div class="desc">2500 từ vựng, đọc báo, xem phim, thuyết trình.</div>
-  </a>
+<!-- ============ LOGIN GATE ============ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-mark">中</div>
+    <h1>Tiếng Trung Cô Phương</h1>
+    <p class="sub">Chọn vai trò để đăng nhập</p>
+
+    <div class="role-pick">
+      <button class="role-btn active" id="pick-student" onclick="pickRole('student')"><span class="ic">🎓</span><span class="lb">Học viên</span></button>
+      <button class="role-btn" id="pick-teacher" onclick="pickRole('teacher')"><span class="ic">🧑‍🏫</span><span class="lb">Giáo viên</span></button>
+    </div>
+
+    <div id="student-fields">
+      <div class="field"><label>Họ và tên</label><input type="text" id="s-name" placeholder="Nguyễn Văn A"></div>
+      <div class="field"><label>Lớp / Mã học viên</label><input type="text" id="s-class" placeholder="VD: HSK1-K1"></div>
+    </div>
+    <div id="teacher-fields" class="hidden">
+      <div class="field"><label>Họ tên giáo viên</label><input type="text" id="t-name" placeholder="Vd: Phương"></div>
+      <div class="field"><label>Mật khẩu</label><input type="password" id="t-pass"></div>
+    </div>
+
+    <button class="login-go" id="lg-btn" onclick="doLogin()">Đăng nhập</button>
+    <div class="login-err" id="lg-err"></div>
+    <p class="login-note">Kết quả học tập được đồng bộ về hệ thống quản lý.</p>
+  </div>
 </div>
 
-<footer>© Tiếng Trung Cô Phương · Zalo tư vấn: 0989 835 275<br><a href="quan-ly.html" style="color:var(--accent);">Dành cho giáo viên: Đăng nhập quản lý →</a></footer>
+<!-- ============ HỌC VIÊN: TRANG CHỌN KHOÁ ============ -->
+<div id="student-view">
+  <div class="topbar-mini">
+    <span>👋 Xin chào, <b id="sv-name"></b> · Lớp <b id="sv-class"></b></span>
+    <button onclick="doLogout()">Đổi tài khoản</button>
+  </div>
+  <header class="sv">
+    <div class="mark">中</div>
+    <h1>Tiếng Trung Cô Phương</h1>
+    <p class="sub" style="color:var(--ink-soft);font-size:13.5px;">Chọn khoá học để bắt đầu</p>
+  </header>
+  <div class="grid">
+    <a class="course" href="hsk1.html"><div class="lv">HSK1</div><div class="name hanzi">HSK 一级</div><div class="desc">Nhập môn — 150 từ vựng, giao tiếp cơ bản hằng ngày.</div><div class="go">Vào học →</div></a>
+    <a class="course soon" href="#"><span class="soon-badge">Sắp ra mắt</span><div class="lv">HSK2</div><div class="name hanzi">HSK 二级</div><div class="desc">300 từ vựng, giao tiếp các chủ đề quen thuộc.</div></a>
+    <a class="course soon" href="#"><span class="soon-badge">Sắp ra mắt</span><div class="lv">HSK3</div><div class="name hanzi">HSK 三级</div><div class="desc">600 từ vựng, giao tiếp trong học tập, công việc.</div></a>
+    <a class="course soon" href="#"><span class="soon-badge">Sắp ra mắt</span><div class="lv">HSK4</div><div class="name hanzi">HSK 四级</div><div class="desc">1200 từ vựng, trao đổi chủ đề rộng, trôi chảy.</div></a>
+    <a class="course soon" href="#"><span class="soon-badge">Sắp ra mắt</span><div class="lv">HSK5</div><div class="name hanzi">HSK 五级</div><div class="desc">2500 từ vựng, đọc báo, xem phim, thuyết trình.</div></a>
+  </div>
+  <footer class="sv">© Tiếng Trung Cô Phương · Zalo tư vấn: 0989 835 275</footer>
+</div>
+
+<!-- ============ GIÁO VIÊN: DASHBOARD ============ -->
+<div id="teacher-app">
+  <button id="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+  <aside id="sidebar">
+    <div id="sb-head">
+      <div class="brand"><div class="mark2">中</div><div class="bn">Tiếng Trung<br>Cô Phương<small>QUẢN LÝ GIÁO VIÊN</small></div></div>
+      <div class="user-chip" id="uc"></div>
+    </div>
+    <ul id="nav">
+      <li><button class="nav-btn active" onclick="goPage('overview')">📋 Tổng quan</button></li>
+      <li><button class="nav-btn" onclick="goPage('classes')">🏫 Lớp học của tôi</button></li>
+      <li><button class="nav-btn" onclick="goPage('assignments')">📝 Giao bài tập</button></li>
+    </ul>
+    <div id="sb-foot"><button class="logout-btn" onclick="doLogout()">↩ Đăng xuất</button></div>
+  </aside>
+  <main id="tmain">
+    <div id="ttopbar"><h2 id="tb-title"></h2><div class="sub" id="tb-sub"></div></div>
+    <div id="tcontent"></div>
+  </main>
+</div>
+<div id="modal-root"></div>
+
+<script>
+const CONFIG = { SHEET_WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbx5uFtJvZxGeDpd5x6u-AKowmimZvmaeJcw_2CYEVtj_2-eb2QSCUK-6eXuzEfE7WCf1g/exec' };
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+const AV_COLORS = ['#c23320','#3a6b8a','#4f7a5b','#a4732c','#7a4f8a','#2c6e6b'];
+function colorFor(id){ let h=0; for(const c of String(id)) h+=c.charCodeAt(0); return AV_COLORS[h%AV_COLORS.length]; }
+function initials(name){ const p=String(name).trim().split(' '); return (p[p.length-1][0]+(p.length>1?p[0][0]:'')).toUpperCase(); }
+
+/* ============================================================
+   LOGIN GATE — chọn vai trò
+   ============================================================ */
+let pickedRole = 'student';
+function pickRole(role){
+  pickedRole = role;
+  document.getElementById('pick-student').classList.toggle('active', role==='student');
+  document.getElementById('pick-teacher').classList.toggle('active', role==='teacher');
+  document.getElementById('student-fields').classList.toggle('hidden', role!=='student');
+  document.getElementById('teacher-fields').classList.toggle('hidden', role!=='teacher');
+  document.getElementById('lg-err').style.display='none';
+}
+
+async function doLogin(){
+  const err = document.getElementById('lg-err');
+  const btn = document.getElementById('lg-btn');
+  err.style.display='none';
+
+  if(pickedRole==='student'){
+    const name = document.getElementById('s-name').value.trim();
+    const klass = document.getElementById('s-class').value.trim();
+    if(!name || !klass){ err.textContent='Vui lòng nhập đủ họ tên và lớp/mã học viên.'; err.style.display='block'; return; }
+    btn.disabled=true; btn.textContent='Đang kiểm tra...';
+    try{
+      const url = CONFIG.SHEET_WEBAPP_URL + '?action=checkLogin&name=' + encodeURIComponent(name) + '&class=' + encodeURIComponent(klass);
+      const res = await fetch(url, {method:'GET'});
+      const data = await res.json();
+      btn.disabled=false; btn.textContent='Đăng nhập';
+      if(!data.valid){ err.textContent='Tên hoặc mã lớp không đúng / chưa được đăng ký. Vui lòng liên hệ giáo viên.'; err.style.display='block'; return; }
+      const student = {name, class:klass};
+      localStorage.setItem('ttcp_student', JSON.stringify(student));
+      fetch(CONFIG.SHEET_WEBAPP_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify({action:'login', name:student.name, class:student.class, lesson:'Trang chủ', time:new Date().toISOString()}) });
+      showStudentView(student);
+    }catch(e){
+      btn.disabled=false; btn.textContent='Đăng nhập';
+      err.textContent='Không kết nối được hệ thống. Vui lòng thử lại.'; err.style.display='block';
+    }
+  }else{
+    const name = document.getElementById('t-name').value.trim();
+    const pass = document.getElementById('t-pass').value;
+    if(!name || !pass){ err.textContent='Vui lòng nhập đủ họ tên và mật khẩu.'; err.style.display='block'; return; }
+    btn.disabled=true; btn.textContent='Đang kiểm tra...';
+    try{
+      const url = CONFIG.SHEET_WEBAPP_URL + '?action=teacherLogin&name=' + encodeURIComponent(name) + '&password=' + encodeURIComponent(pass);
+      const res = await fetch(url, {method:'GET'});
+      const data = await res.json();
+      btn.disabled=false; btn.textContent='Đăng nhập';
+      if(!data.valid){ err.textContent='Sai tên hoặc mật khẩu.'; err.style.display='block'; return; }
+      const teacherObj = {name, classes:data.classes};
+      localStorage.setItem('ttcp_teacher', JSON.stringify(teacherObj));
+      showTeacherView(teacherObj);
+    }catch(e){
+      btn.disabled=false; btn.textContent='Đăng nhập';
+      err.textContent='Không kết nối được hệ thống. Vui lòng thử lại.'; err.style.display='block';
+    }
+  }
+}
+
+function doLogout(){
+  localStorage.removeItem('ttcp_student');
+  localStorage.removeItem('ttcp_teacher');
+  location.reload();
+}
+
+function checkLoginOnLoad(){
+  const savedStudent = localStorage.getItem('ttcp_student');
+  const savedTeacher = localStorage.getItem('ttcp_teacher');
+  if(savedTeacher){ showTeacherView(JSON.parse(savedTeacher)); return true; }
+  if(savedStudent){ showStudentView(JSON.parse(savedStudent)); return true; }
+  return false;
+}
+
+function showStudentView(student){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('teacher-app').classList.remove('show');
+  document.getElementById('student-view').classList.add('show');
+  document.getElementById('sv-name').textContent = student.name;
+  document.getElementById('sv-class').textContent = student.class;
+}
+
+let teacher = null, dashboard = null, currentPage='overview', currentClassId=null, currentGradeId=null;
+async function showTeacherView(teacherObj){
+  teacher = teacherObj;
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('student-view').classList.remove('show');
+  document.getElementById('teacher-app').classList.add('show');
+  document.getElementById('uc').innerHTML = `<b>${esc(teacher.name)}</b><br><span style="opacity:.7;">Giáo viên</span>`;
+  await loadDashboard();
+  goPage('overview');
+}
+
+checkLoginOnLoad();
+
+/* ============================================================
+   TEACHER DASHBOARD (dữ liệu thật từ Google Sheet)
+   ============================================================ */
+async function loadDashboard(){
+  const url = CONFIG.SHEET_WEBAPP_URL + '?action=teacherDashboard&name=' + encodeURIComponent(teacher.name);
+  const res = await fetch(url, {method:'GET'});
+  dashboard = await res.json();
+}
+function goPage(page){
+  currentPage = page; currentClassId=null;
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active', ['overview','classes','assignments'][i]===page));
+  render();
+  if(window.innerWidth<=840) document.getElementById('sidebar').classList.remove('open');
+}
+function setTop(t,s){ document.getElementById('tb-title').textContent=t; document.getElementById('tb-sub').textContent=s||''; }
+
+function studentStats(name){
+  const rows = (dashboard.results||[]).filter(r=>String(r['Họ tên']||'').trim().toLowerCase()===String(name).trim().toLowerCase());
+  const count = rows.length;
+  const avg = count>0 ? Math.round(rows.reduce((s,r)=>s+Number(r['Tỷ lệ %']||0),0)/count) : null;
+  return {count, avg};
+}
+const STAGES = [
+  {emoji:'🌱', label:'Mầm cây', minCount:0, minAvg:0},
+  {emoji:'🪴', label:'Cây non', minCount:3, minAvg:0},
+  {emoji:'🌿', label:'Đang phát triển', minCount:7, minAvg:65},
+  {emoji:'🌳', label:'Trưởng thành', minCount:12, minAvg:75},
+  {emoji:'✨', label:'Xuất sắc', minCount:15, minAvg:88},
+];
+function stageFor(name){
+  const {count, avg} = studentStats(name);
+  let idx=0;
+  STAGES.forEach((s,i)=>{ if(count>=s.minCount && (avg||0)>=s.minAvg) idx=i; });
+  return STAGES[idx];
+}
+
+function render(){
+  const c = document.getElementById('tcontent');
+  if(!dashboard){ c.innerHTML='<div class="placeholder">Đang tải dữ liệu...</div>'; return; }
+  if(currentPage==='overview') return renderOverview(c);
+  if(currentPage==='classes' && !currentClassId) return renderClassList(c);
+  if(currentPage==='classes' && currentClassId) return renderClassDetail(c);
+  if(currentPage==='assignments') return renderAssignmentsAdmin(c);
+}
+
+function renderOverview(c){
+  setTop('Xin chào, ' + teacher.name + ' 👋', 'Tổng quan hoạt động giảng dạy (dữ liệu thật từ Google Sheet)');
+  const classes = dashboard.classes||[];
+  const students = dashboard.students||[];
+  const pendingAssign = (dashboard.submissions||[]).filter(s=>s['Trạng thái']==='Đã nộp').length;
+  const needAttention = students.filter(s=>{ const st=studentStats(s['Họ tên']); return st.avg!==null && st.avg<60; }).length;
+  c.innerHTML = `
+    <div class="tgrid tgrid-4" style="margin-bottom:22px;">
+      <div class="stat-card"><div>🏫</div><div class="num">${classes.length}</div><div class="lbl">Lớp đang phụ trách</div></div>
+      <div class="stat-card"><div>🎓</div><div class="num">${students.length}</div><div class="lbl">Tổng số học viên</div></div>
+      <div class="stat-card"><div>📝</div><div class="num">${pendingAssign}</div><div class="lbl">Bài tự luận chờ chấm</div></div>
+      <div class="stat-card"><div>⚠️</div><div class="num">${needAttention}</div><div class="lbl">Học viên cần theo dõi thêm</div></div>
+    </div>
+    <div class="section-title">📊 Hoạt động ôn tập gần đây</div>
+    <p class="section-sub">Lượt nộp bài ôn tập mới nhất (tự động chấm) trong các lớp bạn phụ trách</p>
+    <div class="card">
+      <table><thead><tr><th>Học viên</th><th>Bài học</th><th>Phần</th><th>Kết quả</th><th>Thời gian</th></tr></thead><tbody>
+      ${(dashboard.results||[]).slice(-8).reverse().map(r=>`<tr>
+        <td><span class="avatar-sm" style="background:${colorFor(r['Họ tên'])}">${initials(r['Họ tên'])}</span>${esc(r['Họ tên'])}</td>
+        <td>${esc(r['Bài học'])}</td><td>${esc(r['Phần bài tập'])}</td>
+        <td>${esc(r['Số câu đúng'])}/${esc(r['Tổng câu'])} (${esc(r['Tỷ lệ %'])}%)</td>
+        <td>${fmtDate(r['Thời gian'])}</td>
+      </tr>`).join('') || '<tr><td colspan="5" style="color:var(--ink-soft);">Chưa có dữ liệu.</td></tr>'}
+      </tbody></table>
+    </div>
+  `;
+}
+function renderClassList(c){
+  setTop('Lớp học của tôi', 'Bấm vào 1 lớp để xem danh sách học viên');
+  const classes = dashboard.classes||[];
+  c.innerHTML = `<div class="tgrid tgrid-3">` + classes.map(cl=>{
+    const cnt = (dashboard.students||[]).filter(s=>String(s['Mã lớp']).trim()===String(cl['Mã lớp']).trim()).length;
+    return `<div class="class-card" onclick="openClass('${esc(cl['Mã lớp'])}')">
+      <h3>${esc(cl['Tên lớp'])}</h3><div class="meta">${esc(cl['Trình độ'])} · 👥 ${cnt} học viên<br>🗓️ ${esc(cl['Lịch học'])}</div>
+    </div>`;
+  }).join('') + `</div>` + (classes.length===0?'<p style="color:var(--ink-soft);">Chưa có lớp nào — kiểm tra tab LopHoc và GiaoVien trong Sheet.</p>':'');
+}
+function openClass(id){ currentClassId=id; render(); }
+function renderClassDetail(c){
+  const cl = (dashboard.classes||[]).find(x=>String(x['Mã lớp']).trim()===currentClassId);
+  const studs = (dashboard.students||[]).filter(s=>String(s['Mã lớp']).trim()===currentClassId);
+  setTop(cl['Tên lớp'], cl['Lịch học']);
+  c.innerHTML = `
+    <button class="back-link" onclick="currentClassId=null;render();">← Quay lại danh sách lớp</button>
+    <div class="card">
+      <table><thead><tr><th>Học viên</th><th>Cây tiến bộ</th><th>Lượt ôn tập</th><th>Tỷ lệ đúng TB</th></tr></thead><tbody>
+      ${studs.map(s=>{
+        const stat = studentStats(s['Họ tên']); const stage = stageFor(s['Họ tên']);
+        return `<tr><td><span class="avatar-sm" style="background:${colorFor(s['Họ tên'])}">${initials(s['Họ tên'])}</span>${esc(s['Họ tên'])}</td>
+          <td>${stage.emoji} ${stage.label}</td><td>${stat.count}</td><td>${stat.avg===null?'—':stat.avg+'%'}</td></tr>`;
+      }).join('') || '<tr><td colspan="4" style="color:var(--ink-soft);">Chưa có học viên trong lớp này.</td></tr>'}
+      </tbody></table>
+    </div>
+  `;
+}
+function renderAssignmentsAdmin(c){
+  setTop('Giao bài tập & chấm bài', 'Bài tập tự luận cho các lớp bạn phụ trách');
+  const classes = dashboard.classes||[];
+  c.innerHTML = `
+    <div class="card" style="margin-bottom:20px;">
+      <div class="section-title" style="font-size:14.5px;">➕ Tạo bài tập mới</div>
+      <div class="f2"><label>Lớp</label><select id="na-class">${classes.map(cl=>`<option value="${esc(cl['Mã lớp'])}">${esc(cl['Tên lớp'])}</option>`).join('')}</select></div>
+      <div class="f2"><label>Tiêu đề</label><input id="na-title" placeholder="Vd: Viết đoạn văn giới thiệu bản thân"></div>
+      <div class="f2"><label>Mô tả</label><textarea id="na-desc" placeholder="Yêu cầu chi tiết..."></textarea></div>
+      <div class="f2"><label>Hạn nộp</label><input type="date" id="na-due"></div>
+      <button class="btn" onclick="createAssignment()">Giao bài tập</button>
+      <span id="na-msg" style="font-size:12px;margin-left:8px;"></span>
+    </div>
+    <div class="section-title">📥 Bài đã nộp — chờ chấm</div>
+    <div class="card">
+      <table><thead><tr><th>Học viên</th><th>Bài tập</th><th>Nội dung</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+      ${(dashboard.submissions||[]).map(s=>{
+        const a = (dashboard.assignments||[]).find(x=>x['Mã bài tập']===s['Mã bài tập']) || {};
+        const done = s['Trạng thái']==='Đã chấm';
+        return `<tr><td><span class="avatar-sm" style="background:${colorFor(s['Họ tên'])}">${initials(s['Họ tên'])}</span>${esc(s['Họ tên'])}</td>
+          <td>${esc(a['Tiêu đề']||'')}</td>
+          <td style="max-width:220px;">${esc(String(s['Nội dung nộp']||'').slice(0,60))}${String(s['Nội dung nộp']||'').length>60?'...':''}</td>
+          <td>${done?'<span class="badge ok">Đã chấm — '+esc(s['Điểm'])+'đ</span>':'<span class="badge warn">Chờ chấm</span>'}</td>
+          <td><button class="btn sm ${done?'ghost':''}" onclick='openGrade(${JSON.stringify(s['Mã bài nộp'])})'>${done?'Xem':'Chấm bài'}</button></td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="5" style="color:var(--ink-soft);">Chưa có bài nộp nào.</td></tr>'}
+      </tbody></table>
+    </div>
+  `;
+}
+function createAssignment(){
+  const classId = document.getElementById('na-class').value;
+  const title = document.getElementById('na-title').value.trim();
+  const description = document.getElementById('na-desc').value.trim();
+  const dueDate = document.getElementById('na-due').value;
+  const msg = document.getElementById('na-msg');
+  if(!title || !dueDate){ msg.textContent='Vui lòng nhập tiêu đề và hạn nộp.'; msg.style.color='var(--error)'; return; }
+  fetch(CONFIG.SHEET_WEBAPP_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify({action:'createAssignment', classId, title, description, dueDate}) })
+  .then(async ()=>{ msg.textContent='Đã giao bài tập!'; msg.style.color='var(--success)'; await loadDashboard(); render(); });
+}
+function openGrade(subId){
+  const s = (dashboard.submissions||[]).find(x=>x['Mã bài nộp']===subId);
+  const a = (dashboard.assignments||[]).find(x=>x['Mã bài tập']===s['Mã bài tập']) || {};
+  const readonly = s['Trạng thái']==='Đã chấm';
+  currentGradeId = subId;
+  const actionsHtml = readonly ? '' : '<button class="btn" onclick="saveGrade(currentGradeId)">Lưu điểm</button>';
+  document.getElementById('modal-root').innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) document.getElementById('modal-root').innerHTML=''">
+      <div class="modal-box">
+        <h3>${esc(a['Tiêu đề']||'')}</h3><div class="sub">Học viên: ${esc(s['Họ tên'])}</div>
+        <div class="f2"><label>Nội dung bài làm</label><textarea readonly>${esc(s['Nội dung nộp'])}</textarea></div>
+        <div class="f2"><label>Điểm (0-100)</label><input type="number" id="gr-score" min="0" max="100" value="${esc(s['Điểm']||'')}" ${readonly?'disabled':''}></div>
+        <div class="f2"><label>Nhận xét</label><textarea id="gr-comment" ${readonly?'disabled':''}>${esc(s['Nhận xét']||'')}</textarea></div>
+        <div class="modal-actions">
+          <button class="btn ghost" onclick="document.getElementById('modal-root').innerHTML=''">Đóng</button>
+          ${actionsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+function saveGrade(subId){
+  const score = parseInt(document.getElementById('gr-score').value);
+  const comment = document.getElementById('gr-comment').value.trim();
+  if(isNaN(score)||score<0||score>100){ alert('Điểm không hợp lệ.'); return; }
+  fetch(CONFIG.SHEET_WEBAPP_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify({action:'gradeAssignment', submissionId:subId, score, comment}) })
+  .then(async ()=>{ document.getElementById('modal-root').innerHTML=''; await loadDashboard(); render(); });
+}
+function fmtDate(d){ try{ return new Date(d).toLocaleString('vi-VN'); }catch(e){ return d; } }
+</script>
 </body>
 </html>
