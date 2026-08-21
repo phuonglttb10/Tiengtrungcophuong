@@ -142,7 +142,7 @@ tr:hover td{background:var(--bg-alt);}
 <div id="modal-root"></div>
 
 <script>
-const CONFIG = { SHEET_WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbxx0vYlgvGi8udBoJex_QHMzMMKYnOvoNr9hRvLYVfFhhCPi9925EytX2iqbFj0vt6ZiA/exec' };
+const CONFIG = { SHEET_WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbx5uFtJvZxGeDpd5x6u-AKowmimZvmaeJcw_2CYEVtj_2-eb2QSCUK-6eXuzEfE7WCf1g/exec' };
 const AV_COLORS = ['#c23320','#3a6b8a','#4f7a5b','#a4732c','#7a4f8a','#2c6e6b'];
 function colorFor(id){ let h=0; for(const c of String(id)) h+=c.charCodeAt(0); return AV_COLORS[h%AV_COLORS.length]; }
 function initials(name){ const p=String(name).trim().split(' '); return (p[p.length-1][0]+(p.length>1?p[0][0]:'')).toUpperCase(); }
